@@ -46,7 +46,7 @@ dependencies {
     -->
     <groupId>com.github.shj1106</groupId>
     <artifactId>recap-plus</artifactId>
-    <version>v1.0.0</version>
+    <version>v1.1.0</version>
 </dependency>
 ```
 ### 텍스트 요약
@@ -54,12 +54,15 @@ dependencies {
 // 요약할 텍스트
 String text = "네. 제가 가져온 아이디어는 소셜 로그인을 쉽게 구축할 수 있는 라이브러리입니다. 웹 서비스를 제작해보신 분들을 알겠지만 소셜 로그인을 구현하는게 굉장히 어렵습니다. 소셜 플랫폼과의 연동뿐만아니라 해당 과정을 클라이언트와 연동하는 과정이 생각보다 많이 복잡합니다. 그래서 이 과정을 차라리 라이브러리화 해서 다양한 소셜 플랫폼을 지원할 뿐만아니라 쉽게 이용할 수 있도록 제작해보고 싶습니다.";
 
-Summarizer summarizer = new Summarizer(); // Summarizer 객체 생성
-List<String> summarizedText = summarizer.summarize(text, // 요약할 텍스트
-    Graph.SimilarityMethods.COSINE_SIMILARITY); // 문장 간 유사도 계산법 - COSINE, JACCARD 유사도 측정법 사용 가능
+Summarizer summarizer = new Summarizer();  // Summarizer 객체 생성
+List<String> summarizedText = summarizer.summarize(
+    text,  // 요약할 원본 텍스트
+    Graph.SimilarityMethods.COSINE_SIMILARITY,  // 문장 간 유사도 계산 및 측정법 (COSINE 또는 JACCARD)
+    null  // 최대 요약 문장 수 제한 (null이면 자동 계산식 적용)
+);
 
 System.out.println(summarizedText);
-// [웹 서비스를 제작해보신 분들을 알겠지만 소셜 로그인을 구현하는게 어렵습니다., 이 과정을 라이브러리화 해서 다양한 소셜 플랫폼을 지원할 쉽게 이용할 수 있도록 제작해보고 싶습니다.]
+// ==> [웹 서비스를 제작해보신 분들을 알겠지만 소셜 로그인을 구현하는게 어렵습니다., 이 과정을 라이브러리화 해서 다양한 소셜 플랫폼을 지원할 쉽게 이용할 수 있도록 제작해보고 싶습니다.]
 ```
 
 ## 아키텍처
