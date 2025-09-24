@@ -82,7 +82,7 @@ public class TextRank {
 
             for(Map.Entry<String, Double> entry : rankedEntries) {
                 String rankedSentence = entry.getKey();
-                int len = rankedSentence.length();
+                int len = rankedSentence.length() + 1;  // 줄바꿈 개행문자 길이도 포함
 
                 if(sumLen + len <= maxTextLen) {
                     summarizedEntries.add(entry);
