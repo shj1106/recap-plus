@@ -18,7 +18,8 @@ repositories {
 dependencies {
     // 라이브러리 추가
     implementation "kr.bydelta:koalanlp-hnn:2.1.4:assembly"
-    implementation 'com.github.team-recap:recap:latest'
+    // implementation 'com.github.team-recap:recap:latest'  // (origin)
+    implementation 'com.github.shj1106:recap-plus:latest'  // ex) :recap-plus:1.0.0
 }
 ```
 ### Maven
@@ -38,9 +39,14 @@ dependencies {
     <version>2.1.4</version>
 </dependency>
 <dependency>
+    <!--  // (origin)
     <groupId>com.github.team-recap</groupId>
     <artifactId>recap</artifactId>
     <version>v0.0.6</version>
+    -->
+    <groupId>com.github.shj1106</groupId>
+    <artifactId>recap-plus</artifactId>
+    <version>v1.0.0</version>
 </dependency>
 ```
 ### 텍스트 요약
