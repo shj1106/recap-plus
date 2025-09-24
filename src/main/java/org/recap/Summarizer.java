@@ -40,7 +40,7 @@ public class Summarizer {
 
         // 그래프 생성
         WeightedGraph graph = Graph.makeWeightedGraph(wordsWithSentences, similarityMethods);  // 그래프 및 가중치 생성
-        return TextRank.calculateTextRank(graph, recapSize).stream().map(Map.Entry::getKey).collect(Collectors.toList());
+        return TextRank.calculateTextRank(graph, recapSize, null).stream().map(Map.Entry::getKey).collect(Collectors.toList());
     }
 
     public List<String> summarizeByTextLen(String text, Graph.SimilarityMethods similarityMethods, Integer maxTextLen) {  // maxTextLen == null 가능.
@@ -53,28 +53,10 @@ public class Summarizer {
         Map<String, List<String>> wordsWithSentences = Extractor.extract(sentences);  // 명사추출, 문장 내 부사제거
 
         WeightedGraph graph = Graph.makeWeightedGraph(wordsWithSentences, similarityMethods);  // 그래프 및 가중치 생성
-        List<Map.Entry<String, Double>> rankedSentences = TextRank.calculateTextRank(graph, sentencesSize);  // TextRank 계산
+        List<Map.Entry<String, Double>> rankedSentences = TextRank.calculateTextRank(graph, sentencesSize, maxTextLen);  // TextRank 계산
 
-        List<String> summarizedSentences = new ArrayList<>();
-        int sumLen = 0;
-        for(Map.Entry<String, Double> entry : rankedSentences) {
-            String rankedSentence = entry.getKey();
-            int len = rankedSentence.length();
-
-            if(sumLen + len <= maxTextLen) {
-                summarizedSentences.add(rankedSentence);
-                sumLen += len;
-            }
-            else break;
-        }
-
-        // 최소 1문장은 반드시 포함할것.
-        // (혹여 1문장 정도는 최대글자수를 넘어도 무방하며, 오히려 비어있는 요약이 더 치명적임.)
-        if(summarizedSentences.isEmpty() && !rankedSentences.isEmpty()) {
-            String firstRankedSentence = rankedSentences.get(0).getKey();
-            summarizedSentences.add(firstRankedSentence);
-        }
-
-        return summarizedSentences;
+        return rankedSentences.stream()
+                .map(Map.Entry::getKey)  // 문장만 추출
+                .collect(Collectors.toList());
     }
 }

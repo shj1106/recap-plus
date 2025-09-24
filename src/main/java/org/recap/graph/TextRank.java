@@ -2,12 +2,13 @@ package org.recap.graph;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TextRank {
-    public static List<Map.Entry<String, Double>> calculateTextRank(WeightedGraph graph, int recapSize) {
+    public static List<Map.Entry<String, Double>> calculateTextRank(WeightedGraph graph, int recapSize, Integer maxTextLen) {  // maxTextLen == null 가능.
         double tolerance = 0.0001;  // 이전 스코어의 최대값과 현재 스코어의 최대값을 (변화량) 비교하여 tolerance이하이면 알고리즘 종료
         double dampingFactor = 0.85d;  // 다른 노드로 이동할 확률(이탈률) 일반적으로 0.85를 많이 사용
         int maxNumIterations = 100;  // 최대로 돌아가는 값
@@ -64,12 +65,41 @@ public class TextRank {
             maxNumIterations--;  // 카운트 감소
         }
 
-        return scores.entrySet().stream()
-                .sorted((elem1, elem2) -> Double.compare(elem2.getValue(), elem1.getValue()))  // 점수 기준으로 정렬
-                .limit(recapSize)  // 상위 recapSize만큼 선택
-                .collect(Collectors.toList())
-                .stream()
-                .sorted((source, target) -> Integer.compare(graph.getNodes().indexOf(source.getKey()), graph.getNodes().indexOf(target.getKey())))  // 그래프의 키를 기준으로 정렬
-                .collect(Collectors.toList());
+        if(maxTextLen != null) {
+            return scores.entrySet().stream()
+                    .sorted((elem1, elem2) -> Double.compare(elem2.getValue(), elem1.getValue()))  // 점수 기준으로 정렬
+                    .limit(recapSize)  // 상위 recapSize만큼 선택
+                    .sorted((source, target) -> Integer.compare(graph.getNodes().indexOf(source.getKey()), graph.getNodes().indexOf(target.getKey())))  // 그래프의 키를 기준으로 정렬 (원래 문장순서)
+                    .collect(Collectors.toList());
+        }
+        else {
+            List<Map.Entry<String, Double>> rankedEntries = scores.entrySet().stream()
+                    .sorted((elem1, elem2) -> Double.compare(elem2.getValue(), elem1.getValue()))  // 점수 기준으로 정렬
+                    .collect(Collectors.toList());
+
+            List<Map.Entry<String, Double>> summarizedEntries = new ArrayList<>();
+            int sumLen = 0;
+
+            for(Map.Entry<String, Double> entry : rankedEntries) {
+                String rankedSentence = entry.getKey();
+                int len = rankedSentence.length();
+
+                if(sumLen + len <= maxTextLen) {
+                    summarizedEntries.add(entry);
+                    sumLen += len;
+                }
+                else break;
+            }
+
+            // 최소 1문장은 반드시 포함할것.
+            // (혹여 1문장 정도는 최대글자수를 넘어도 무방하며, 오히려 비어있는 요약이 더 치명적임.)
+            if(summarizedEntries.isEmpty() && !rankedEntries.isEmpty()) {
+                summarizedEntries.add(rankedEntries.get(0));
+            }
+
+            return summarizedEntries.stream()
+                    .sorted((source, target) -> Integer.compare(graph.getNodes().indexOf(source.getKey()), graph.getNodes().indexOf(target.getKey())))  // 그래프의 키를 기준으로 정렬 (원래 문장순서)
+                    .collect(Collectors.toList());
+        }
     }
 }
