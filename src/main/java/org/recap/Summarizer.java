@@ -6,6 +6,7 @@ import org.recap.graph.WeightedGraph;
 import org.recap.sentence.Extractor;
 import org.recap.sentence.Splitter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
