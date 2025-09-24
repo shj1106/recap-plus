@@ -65,11 +65,11 @@ public class TextRank {
         }
 
         return scores.entrySet().stream()
-                .sorted((elem1, elem2) -> elem1.getValue() < elem2.getValue() ? 1 : -1)  // 점수 기준으로 정렬
+                .sorted((elem1, elem2) -> Double.compare(elem2.getValue(), elem1.getValue()))  // 점수 기준으로 정렬
                 .limit(recapSize)  // 상위 recapSize만큼 선택
                 .collect(Collectors.toList())
                 .stream()
-                .sorted((source, target) -> graph.getNodes().indexOf(source.getKey()) > graph.getNodes().indexOf(target.getKey()) ? 1 : -1)  // 그래프의 키를 기준으로 정렬
+                .sorted((source, target) -> Integer.compare(graph.getNodes().indexOf(source.getKey()), graph.getNodes().indexOf(target.getKey())))  // 그래프의 키를 기준으로 정렬
                 .collect(Collectors.toList());
     }
 }
