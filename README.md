@@ -12,7 +12,7 @@
    - `"IllegalArgumentException: Comparison method violates its general contract"`<br>&#8594; 위 예외를 `Integer.compare()` 안전한 비교 구문으로 전환함으로써, 정렬 기준을 명확히해 해결.
 3. &nbsp;서비스 내 AI 요청 전처리를 위해, 세부 조정이 가능한 커스텀 기능을 개발했습니다.
    - "사용 중인 OpenAI 모델 한도 : `TPM 분당 20만 토큰`, `Input $0.1당 100만 토큰`"<br>&#8594; 위 한도를 초과하지 않도록, 예상 비용에 따라 텍스트 길이를 유동적으로 조정해야 하는 상황.
-   - 원하는 길이에 맞춰 텍스트를 요약할 수 있도록, 기존 TextRank 로직에 커스텀 파라미터를 도입.<br>&#8594; 최대 글자수(`maxTextLen`) 및 문장수(`maxSentenseSize`)를 통해 개인화 가능.
+   - 원하는 길이에 맞춰 텍스트를 요약할 수 있도록, 기존 TextRank 로직에 커스텀 파라미터를 도입.<br>&#8594; 최대 글자수(`maxTextLen`) 및 문장수(`maxSentenseSize`)를 설정해 개인화 가능.
 
 ### 링크
 >[ 출처 ]<br>
