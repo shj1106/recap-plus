@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class TextRank {
     public static List<Map.Entry<String, Double>> calculateTextRank(WeightedGraph graph, int recapSize, Integer maxTextLen) {  // maxTextLen == null 가능.
-        double tolerance = 0.0001;  // 이전 스코어의 최대값과 현재 스코어의 최대값을 (변화량) 비교하여 tolerance이하이면 알고리즘 종료
+        double tolerance = 0.0001;  // 이전 스코어의 최대값과 현재 스코어의 최대값을 (변화량) 비교하여 tolerance 이하이면 알고리즘 종료
         double dampingFactor = 0.85d;  // 다른 노드로 이동할 확률(이탈률) 일반적으로 0.85를 많이 사용
         int maxNumIterations = 100;  // 최대로 돌아가는 값
 
@@ -25,13 +25,11 @@ public class TextRank {
             }
         }
 
-        double scoresChangeValue = tolerance;  // 이전 점수와 현재 점수의 변화량의 최대값을 저장할 변수
-
         // TextRank 알고리즘 반복 실행
+        double scoresChangeValue = tolerance;  // 이전 점수와 현재 점수의 변화량의 최대값을 저장할 변수
         while (maxNumIterations > 0 && scoresChangeValue >= tolerance){  // 최대로 돌아가거나 변화량의 최대값이 공차 이하면 종료
-            Map<String, Double> newScores = new HashMap<>();
-
             scoresChangeValue = 0d;  // 초기화
+            Map<String, Double> newScores = new HashMap<>();
 
             // 평균 텔레포트 확률 계산
             double avgTelePer = 0d;  // 초기값
@@ -65,14 +63,14 @@ public class TextRank {
             maxNumIterations--;  // 카운트 감소
         }
 
-        if(maxTextLen == null) {
+        if(maxTextLen == null) {  // summarizeBySentenseSize()에서 호출 예정.
             return scores.entrySet().stream()
                     .sorted((elem1, elem2) -> Double.compare(elem2.getValue(), elem1.getValue()))  // 점수 기준으로 정렬
                     .limit(recapSize)  // 상위 recapSize만큼 선택
                     .sorted((source, target) -> Integer.compare(graph.getNodes().indexOf(source.getKey()), graph.getNodes().indexOf(target.getKey())))  // 그래프의 키를 기준으로 정렬 (원래 문장순서)
                     .collect(Collectors.toList());
         }
-        else {
+        else {  // summarizeByTextLen()에서 호출 예정.
             List<Map.Entry<String, Double>> rankedEntries = scores.entrySet().stream()
                     .sorted((elem1, elem2) -> Double.compare(elem2.getValue(), elem1.getValue()))  // 점수 기준으로 정렬
                     .collect(Collectors.toList());

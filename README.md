@@ -5,20 +5,20 @@
 
 ### 배경
 1. &nbsp;프로덕션 서비스에 적용하기에, 타인이 GitHub + JitPack 배포한 모듈은 불안정합니다.
-   - 중간에 private로 전환되거나 삭제될 경우 치명적이므로, 별도 재배포해 유지가 필요한 상황.
+   - &#8594; 중간에 private로 전환되거나 삭제될 경우 치명적이므로, 별도 재배포해 유지가 필요한 상황.
 2. &nbsp;재배포하며, 기존 코드의 잘못된 오류와 성능 누수를 개선하고자 했습니다.
    - `자카드 유사도` 파라미터를 넣었음에도 `calculateJaccardSimilarity()`가 아닌,<br>`코사인 유사도` 공식의 `calculateCosineSimilarity()`로 계산되던 휴먼 에러를 수정.
-   - `"IllegalArgumentException: Comparison method violates its general contract"`<br>위 예외를 `Integer.compare()` 안전한 비교 구문으로 전환함으로써, 정렬 기준을 명확히해 해결.
    - 정렬 과정에서 `stream().sorted()`가 2회 연속 체이닝된 성능 누수를 개선.
+   - `"IllegalArgumentException: Comparison method violates its general contract"`<br>&#8594; 위 예외를 `Integer.compare()` 안전한 비교 구문으로 전환함으로써, 정렬 기준을 명확히해 해결.
 3. &nbsp;서비스 내 AI 요청 전처리를 위해, 세부 조정이 가능한 커스텀 기능을 개발했습니다.
-   - "사용 중인 OpenAI 모델 한도 : `TPM 분당 20만 토큰`, `Input $0.1당 100만 토큰`"<br>위 한도를 초과하지 않도록, 예상 비용에 따라 텍스트 길이를 유동적으로 조정해야 하는 상황.
-   - TextRank 로직 내 최대 길이(`maxTextLen`)를 nullable 파라미터로 도입하여,<br>기존 공식 외에도 원하는 길이에 맞춰 텍스트를 요약할 수 있도록 개인화 디벨롭.
+   - "사용 중인 OpenAI 모델 한도 : `TPM 분당 20만 토큰`, `Input $0.1당 100만 토큰`"<br>&#8594; 위 한도를 초과하지 않도록, 예상 비용에 따라 텍스트 길이를 유동적으로 조정해야 하는 상황.
+   - 원하는 길이에 맞춰 텍스트를 요약할 수 있도록, 기존 TextRank 로직에 커스텀 파라미터를 도입.<br>&#8594; 최대 글자수(`maxTextLen`) 및 문장수(`maxSentenseSize`)를 통해 개인화 가능.
 
 ### 링크
->[ 정보 ]<br>
+>[ 출처 ]<br>
 ◦&nbsp;&nbsp;`Recap` Repository (origin) :&nbsp;&nbsp;https://github.com/team-recap/recap<br>
 ◦&nbsp;&nbsp;`Recap Plus` Repository (custom) :&nbsp;&nbsp;https://github.com/shj1106/recap-plus<br>
-◦&nbsp;&nbsp;`Recap Plus` Developer :&nbsp;&nbsp;https://github.com/tkguswls1106<br><br>
+◦&nbsp;&nbsp;`Recap Plus` Developer :&nbsp;&nbsp;https://github.com/tkguswls1106 (shj1106 동일인)<br><br>
 [ 실서비스 ]<br>
 ◦&nbsp;&nbsp;`Recap Plus` 적용된 서비스 :&nbsp;&nbsp;https://github.com/OnlineMemo<br>
 ◦&nbsp;&nbsp;`Recap Plus` 적용된 PR :&nbsp;&nbsp;[https://github.com/OnlineMemo/.../pull/11](https://github.com/OnlineMemo/backend/pull/11)<br>
@@ -52,7 +52,7 @@ repositories {
 dependencies {
     implementation "kr.bydelta:koalanlp-hnn:2.1.4:assembly"
     // implementation 'com.github.team-recap:recap:0.0.6'  // (origin: Recap)
-    implementation 'com.github.shj1106:recap-plus:v2.0.4'  // (custom: Recap Plus)
+    implementation 'com.github.shj1106:recap-plus:v2.1.0'  // (custom: Recap Plus)
 }
 ```
 
@@ -80,35 +80,60 @@ dependencies {
     <!-- (custom: Recap Plus) -->
     <groupId>com.github.shj1106</groupId>
     <artifactId>recap-plus</artifactId>
-    <version>v2.0.4</version>
+    <version>v2.1.0</version>
 </dependency>
 ```
 
 ### 텍스트 요약
 ```java
 // 요약할 텍스트
-String text = "네. 제가 가져온 아이디어는 소셜 로그인을 쉽게 구축할 수 있는 라이브러리입니다. 웹 서비스를 제작해보신 분들을 알겠지만 소셜 로그인을 구현하는게 굉장히 어렵습니다. 소셜 플랫폼과의 연동뿐만아니라 해당 과정을 클라이언트와 연동하는 과정이 생각보다 많이 복잡합니다. 그래서 이 과정을 차라리 라이브러리화 해서 다양한 소셜 플랫폼을 지원할 뿐만아니라 쉽게 이용할 수 있도록 제작해보고 싶습니다.";
+String text = "네. 제가 가져온 아이디어는 소셜 로그인을 쉽게 구축할 수 있는 라이브러리입니다. 웹 서비스를 제작해보신 분들은 알겠지만 소셜 로그인을 구현하는게 굉장히 어렵습니다. 소셜 플랫폼과의 연동뿐만아니라 해당 과정을 클라이언트와 연동하는 과정이 생각보다 많이 복잡합니다. 그래서 이 과정을 차라리 라이브러리화 해서 다양한 소셜 플랫폼을 지원할 뿐만아니라 쉽게 이용할 수 있도록 제작해보고 싶습니다.";
+
 
 // (origin: Recap)
+
 /*
 Summarizer summarizer = new Summarizer();  // Summarizer 객체 생성
 List<String> summarizedText = summarizer.summarize(
     text,  // 요약할 원본 텍스트
     Graph.SimilarityMethods.COSINE_SIMILARITY  // 문장 간 유사도 계산 및 측정법 (COSINE 또는 JACCARD)
 );
-*/
-
-// (custom: Recap Plus)
-Summarizer summarizer = new Summarizer();  // Summarizer 객체 생성
-List<String> summarizedText = summarizer.summarizeByTextLen(
-    text,  // 요약할 원본 텍스트
-    Graph.SimilarityMethods.COSINE_SIMILARITY,  // 문장 간 유사도 계산 및 측정법 (COSINE 또는 JACCARD)
-    100  // 최대 요약 전체글자 수 제한 (null이면 자동 계산식 적용)
-);
 
 System.out.println(summarizedText);
-// ==> [ "웹 서비스를 제작해보신 분들을 알겠지만 소셜 로그인을 구현하는게 어렵습니다.",
+// ==> [ "웹 서비스를 제작해보신 분들은 알겠지만 소셜 로그인을 구현하는게 어렵습니다.",
 //       "이 과정을 라이브러리화 해서 다양한 소셜 플랫폼을 지원할 쉽게 이용할 수 있도록 제작해보고 싶습니다." ]
+*/
+
+
+// (custom: Recap Plus)
+
+// - 방법 1 (기본 옵션)
+Summarizer summarizer = new Summarizer();  // Summarizer 객체 생성
+List<String> summarizedText1 = summarizer.summarize(
+    text,  // 요약할 원본 텍스트
+    Graph.SimilarityMethods.COSINE_SIMILARITY  // 문장 간 유사도 계산 및 측정법 (COSINE 또는 JACCARD)
+);
+
+// - 방법 2 (최대 문장수 기준)
+List<String> summarizedText2 = summarizer.summarizeByTextLen(
+    text,
+    Graph.SimilarityMethods.COSINE_SIMILARITY,
+    2  // 최대 요약 전체문장 수 제한
+);
+
+// - 방법 3 (최대 글자수 기준)
+List<String> summarizedText3 = summarizer.summarizeByTextLen(
+    text,
+    Graph.SimilarityMethods.COSINE_SIMILARITY,
+    100  // 최대 요약 전체글자 수 제한
+);
+
+System.out.println(summarizer.joinText(summarizedText3, null));
+// ==> "웹 서비스를 제작해보신 분들은 알겠지만 소셜 로그인을 구현하는게 어렵습니다.\n
+//      이 과정을 라이브러리화 해서 다양한 소셜 플랫폼을 지원할 쉽게 이용할 수 있도록 제작해보고 싶습니다."
+
+System.out.println(summarizer.joinText(summarizedText3, " "));
+// ==> "웹 서비스를 제작해보신 분들은 알겠지만 소셜 로그인을 구현하는게 어렵습니다. 이 과정을 라이브러리화 해서 다양한 소셜 플랫폼을 지원할 쉽게 이용할 수 있도록 제작해보고 싶습니다."
 ```
 
 <br>

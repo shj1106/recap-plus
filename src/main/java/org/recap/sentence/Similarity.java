@@ -20,7 +20,7 @@ public class Similarity {
         return new ArrayList<>(sourceSet);
     }
 
-
+    
     // 코사인 유사도 계산
     public static float calculateCosineSimilarity(Map.Entry<String, List<String>> entrySource, Map.Entry<String, List<String>> entryTarget) {
         List<String> intersection = intersection(entrySource.getValue(), entryTarget.getValue());
