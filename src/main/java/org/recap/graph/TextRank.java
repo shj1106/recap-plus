@@ -63,7 +63,7 @@ public class TextRank {
             maxNumIterations--;  // 카운트 감소
         }
 
-        if(maxTextLen == null) {  // summarizeBySentenseSize()에서 호출 예정.
+        if(maxTextLen == null) {  // summarize() 및 summarizeBySentenseSize()에서 호출 예정.
             return scores.entrySet().stream()
                     .sorted((elem1, elem2) -> Double.compare(elem2.getValue(), elem1.getValue()))  // 점수 기준으로 정렬
                     .limit(recapSize)  // 상위 recapSize만큼 선택

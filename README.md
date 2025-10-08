@@ -52,7 +52,7 @@ repositories {
 dependencies {
     implementation "kr.bydelta:koalanlp-hnn:2.1.4:assembly"
     // implementation 'com.github.team-recap:recap:0.0.6'  // (origin: Recap)
-    implementation 'com.github.shj1106:recap-plus:v2.1.0'  // (custom: Recap Plus)
+    implementation 'com.github.shj1106:recap-plus:v2.1.1'  // (custom: Recap Plus)
 }
 ```
 
@@ -80,7 +80,7 @@ dependencies {
     <!-- (custom: Recap Plus) -->
     <groupId>com.github.shj1106</groupId>
     <artifactId>recap-plus</artifactId>
-    <version>v2.1.0</version>
+    <version>v2.1.1</version>
 </dependency>
 ```
 
