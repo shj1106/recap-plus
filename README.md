@@ -21,7 +21,8 @@
 ◦&nbsp;&nbsp;`Recap Plus` Developer :&nbsp;&nbsp;https://github.com/tkguswls1106<br><br>
 [ 실서비스 ]<br>
 ◦&nbsp;&nbsp;`Recap Plus` 적용된 서비스 :&nbsp;&nbsp;https://github.com/OnlineMemo<br>
-◦&nbsp;&nbsp;`Recap Plus` 적용된 코드 :&nbsp;&nbsp;[https://github.com/.../MemoServiceImpl#L256](https://github.com/OnlineMemo/backend/blob/5fbe9408ce3d06f1dea785e3fe0a855b1ce3d550/src/main/java/com/shj/onlinememospringproject/service/impl/MemoServiceImpl.java#L256)
+◦&nbsp;&nbsp;`Recap Plus` 적용된 PR :&nbsp;&nbsp;[https://github.com/OnlineMemo/.../pull/11](https://github.com/OnlineMemo/backend/pull/11)<br>
+◦&nbsp;&nbsp;`Recap Plus` 적용된 코드 :&nbsp;&nbsp;[https://github.com/OnlineMemo/.../MemoService#L256](https://github.com/OnlineMemo/backend/blob/5fbe9408ce3d06f1dea785e3fe0a855b1ce3d550/src/main/java/com/shj/onlinememospringproject/service/impl/MemoServiceImpl.java#L256)
 
 <br>
 
