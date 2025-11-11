@@ -8,7 +8,7 @@
    - &#8594; 중간에 private로 전환되거나 삭제될 경우 치명적이므로, 별도 재배포해 유지가 필요한 상황.
 2. &nbsp;재배포하며, 기존 코드의 잘못된 오류와 성능 누수를 개선하고자 했습니다.
    - `자카드 유사도` 파라미터를 넣었음에도 `calculateJaccardSimilarity()`가 아닌,<br>`코사인 유사도` 공식의 `calculateCosineSimilarity()`로 계산되던 휴먼 에러를 수정.
-   - 정렬 과정에서 `stream().sorted()`가 2회 연속 체이닝된 성능 누수를 개선.
+   - 정렬 과정에서 `stream().sorted().collect()`가 2회 연속 체이닝된 성능 누수를 개선.
    - `"IllegalArgumentException: Comparison method violates its general contract"`<br>&#8594; 위 예외를 `Integer.compare()` 안전한 비교 구문으로 전환함으로써, 정렬 기준을 명확히해 해결.
 3. &nbsp;서비스 내 AI 요청 전처리를 위해, 세부 조정이 가능한 커스텀 기능을 개발했습니다.
    - "사용 중인 OpenAI 모델 한도 : `TPM 분당 20만 토큰`, `Input $0.1당 100만 토큰`"<br>&#8594; 위 한도를 초과하지 않도록, 예상 비용에 따라 텍스트 길이를 유동적으로 조정해야 하는 상황.
